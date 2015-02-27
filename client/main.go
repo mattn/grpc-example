@@ -53,28 +53,31 @@ func list() error {
 }
 
 func main() {
-	(&sc.Cmds{
-		{
-			Name: "list",
-			Desc: "list: listing person",
-			Run: func(c *sc.C, args []string) error {
-				return list()
+	sc.Main(&sc.C{
+		Desc: "grpc example",
+		Cmds: sc.Cmds{
+			{
+				Name: "list",
+				Desc: "list: listing person",
+				Run: func(c *sc.C, args []string) error {
+					return list()
+				},
+			},
+			{
+				Name: "add",
+				Desc: "add [name] [age]: add person",
+				Run: func(c *sc.C, args []string) error {
+					if len(args) != 2 {
+						return sc.UsageError
+					}
+					name := args[0]
+					age, err := strconv.Atoi(args[1])
+					if err != nil {
+						return err
+					}
+					return add(name, age)
+				},
 			},
 		},
-		{
-			Name: "add",
-			Desc: "add [name] [age]: add person",
-			Run: func(c *sc.C, args []string) error {
-				if len(args) != 2 {
-					return sc.UsageError
-				}
-				name := args[0]
-				age, err := strconv.Atoi(args[1])
-				if err != nil {
-					return err
-				}
-				return add(name, age)
-			},
-		},
-	}).Run(&sc.C{})
+	})
 }
