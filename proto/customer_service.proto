@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+package proto;
+
+service CustomerService {
+  rpc ListPerson(RequestType) returns (stream Person) {};
+  rpc AddPerson(Person) returns (ResponseType) {}
+
+}
+
+message ResponseType {
+}
+
+message RequestType {
+}
+
+message Person {
+  string name = 1;
+  int32  age  = 2;
+}
