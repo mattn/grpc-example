@@ -16,6 +16,8 @@ It has these top-level messages:
 package proto
 
 import proto1 "github.com/golang/protobuf/proto"
+import fmt "fmt"
+import math "math"
 
 import (
 	context "golang.org/x/net/context"
@@ -23,37 +25,53 @@ import (
 )
 
 // Reference imports to suppress errors if they are not otherwise used.
-var _ context.Context
-var _ grpc.ClientConn
-
-// Reference imports to suppress errors if they are not otherwise used.
 var _ = proto1.Marshal
+var _ = fmt.Errorf
+var _ = math.Inf
+
+// This is a compile-time assertion to ensure that this generated file
+// is compatible with the proto package it is being compiled against.
+const _ = proto1.ProtoPackageIsVersion1
 
 type ResponseType struct {
 }
 
-func (m *ResponseType) Reset()         { *m = ResponseType{} }
-func (m *ResponseType) String() string { return proto1.CompactTextString(m) }
-func (*ResponseType) ProtoMessage()    {}
+func (m *ResponseType) Reset()                    { *m = ResponseType{} }
+func (m *ResponseType) String() string            { return proto1.CompactTextString(m) }
+func (*ResponseType) ProtoMessage()               {}
+func (*ResponseType) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{0} }
 
 type RequestType struct {
 }
 
-func (m *RequestType) Reset()         { *m = RequestType{} }
-func (m *RequestType) String() string { return proto1.CompactTextString(m) }
-func (*RequestType) ProtoMessage()    {}
+func (m *RequestType) Reset()                    { *m = RequestType{} }
+func (m *RequestType) String() string            { return proto1.CompactTextString(m) }
+func (*RequestType) ProtoMessage()               {}
+func (*RequestType) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{1} }
 
 type Person struct {
 	Name string `protobuf:"bytes,1,opt,name=name" json:"name,omitempty"`
 	Age  int32  `protobuf:"varint,2,opt,name=age" json:"age,omitempty"`
 }
 
-func (m *Person) Reset()         { *m = Person{} }
-func (m *Person) String() string { return proto1.CompactTextString(m) }
-func (*Person) ProtoMessage()    {}
+func (m *Person) Reset()                    { *m = Person{} }
+func (m *Person) String() string            { return proto1.CompactTextString(m) }
+func (*Person) ProtoMessage()               {}
+func (*Person) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{2} }
 
 func init() {
+	proto1.RegisterType((*ResponseType)(nil), "proto.ResponseType")
+	proto1.RegisterType((*RequestType)(nil), "proto.RequestType")
+	proto1.RegisterType((*Person)(nil), "proto.Person")
 }
+
+// Reference imports to suppress errors if they are not otherwise used.
+var _ context.Context
+var _ grpc.ClientConn
+
+// This is a compile-time assertion to ensure that this generated file
+// is compatible with the grpc package it is being compiled against.
+const _ = grpc.SupportPackageIsVersion1
 
 // Client API for CustomerService service
 
@@ -76,7 +94,7 @@ func (c *customerServiceClient) ListPerson(ctx context.Context, in *RequestType,
 		return nil, err
 	}
 	x := &customerServiceListPersonClient{stream}
-	if err := x.ClientStream.SendProto(in); err != nil {
+	if err := x.ClientStream.SendMsg(in); err != nil {
 		return nil, err
 	}
 	if err := x.ClientStream.CloseSend(); err != nil {
@@ -96,7 +114,7 @@ type customerServiceListPersonClient struct {
 
 func (x *customerServiceListPersonClient) Recv() (*Person, error) {
 	m := new(Person)
-	if err := x.ClientStream.RecvProto(m); err != nil {
+	if err := x.ClientStream.RecvMsg(m); err != nil {
 		return nil, err
 	}
 	return m, nil
@@ -124,7 +142,7 @@ func RegisterCustomerServiceServer(s *grpc.Server, srv CustomerServiceServer) {
 
 func _CustomerService_ListPerson_Handler(srv interface{}, stream grpc.ServerStream) error {
 	m := new(RequestType)
-	if err := stream.RecvProto(m); err != nil {
+	if err := stream.RecvMsg(m); err != nil {
 		return err
 	}
 	return srv.(CustomerServiceServer).ListPerson(m, &customerServiceListPersonServer{stream})
@@ -140,12 +158,12 @@ type customerServiceListPersonServer struct {
 }
 
 func (x *customerServiceListPersonServer) Send(m *Person) error {
-	return x.ServerStream.SendProto(m)
+	return x.ServerStream.SendMsg(m)
 }
 
-func _CustomerService_AddPerson_Handler(srv interface{}, ctx context.Context, buf []byte) (proto1.Message, error) {
+func _CustomerService_AddPerson_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error) (interface{}, error) {
 	in := new(Person)
-	if err := proto1.Unmarshal(buf, in); err != nil {
+	if err := dec(in); err != nil {
 		return nil, err
 	}
 	out, err := srv.(CustomerServiceServer).AddPerson(ctx, in)
@@ -171,4 +189,20 @@ var _CustomerService_serviceDesc = grpc.ServiceDesc{
 			ServerStreams: true,
 		},
 	},
+}
+
+var fileDescriptor0 = []byte{
+	// 180 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x09, 0x6e, 0x88, 0x02, 0xff, 0xe2, 0x12, 0x4b, 0x2e, 0x2d, 0x2e,
+	0xc9, 0xcf, 0x4d, 0x2d, 0x8a, 0x2f, 0x4e, 0x2d, 0x2a, 0xcb, 0x4c, 0x4e, 0xd5, 0x2b, 0x28, 0xca,
+	0x2f, 0xc9, 0x17, 0x62, 0x05, 0x53, 0x4a, 0x7c, 0x5c, 0x3c, 0x41, 0xa9, 0xc5, 0x05, 0xf9, 0x79,
+	0xc5, 0xa9, 0x21, 0x95, 0x05, 0xa9, 0x4a, 0xbc, 0x5c, 0xdc, 0x41, 0xa9, 0x85, 0xa5, 0xa9, 0xc5,
+	0x25, 0x60, 0xae, 0x1e, 0x17, 0x5b, 0x40, 0x6a, 0x51, 0x71, 0x7e, 0x9e, 0x90, 0x10, 0x17, 0x4b,
+	0x5e, 0x62, 0x6e, 0xaa, 0x04, 0xa3, 0x02, 0xa3, 0x06, 0x67, 0x10, 0x98, 0x2d, 0x24, 0xc0, 0xc5,
+	0x9c, 0x98, 0x9e, 0x2a, 0xc1, 0x04, 0x14, 0x62, 0x0d, 0x02, 0x31, 0x8d, 0x2a, 0xb9, 0xf8, 0x9d,
+	0xa1, 0xf6, 0x05, 0x43, 0xac, 0x13, 0x32, 0xe6, 0xe2, 0xf2, 0xc9, 0x2c, 0x2e, 0x81, 0x19, 0x03,
+	0xb1, 0x5e, 0x0f, 0xc9, 0x12, 0x29, 0x5e, 0xa8, 0x18, 0x44, 0x89, 0x12, 0x83, 0x01, 0xa3, 0x90,
+	0x21, 0x17, 0xa7, 0x63, 0x4a, 0x0a, 0x54, 0x0f, 0xaa, 0xbc, 0x94, 0x30, 0xdc, 0x08, 0x24, 0x77,
+	0x33, 0x24, 0xb1, 0x81, 0x45, 0x8d, 0x01, 0x01, 0x00, 0x00, 0xff, 0xff, 0xff, 0x47, 0x91, 0x5a,
+	0xf1, 0x00, 0x00, 0x00,
 }
