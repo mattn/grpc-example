@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"io"
 	"strconv"
 
@@ -9,32 +8,21 @@ import (
 	"github.com/mattn/sc"
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/grpclog"
 )
 
-func add(name string, age int) error {
-	conn, err := grpc.Dial("127.0.0.1:11111")
-	if err != nil {
-		return err
-	}
-	defer conn.Close()
-	client := pb.NewCustomerServiceClient(conn)
+const address = "127.0.0.1:11111"
 
+func add(client pb.CustomerServiceClient, name string, age int) error {
 	person := &pb.Person{
 		Name: name,
 		Age:  int32(age),
 	}
-	_, err = client.AddPerson(context.Background(), person)
+	_, err := client.AddPerson(context.Background(), person)
 	return err
 }
 
-func list() error {
-	conn, err := grpc.Dial("127.0.0.1:11111")
-	if err != nil {
-		return err
-	}
-	defer conn.Close()
-	client := pb.NewCustomerServiceClient(conn)
-
+func list(client pb.CustomerServiceClient) error {
 	stream, err := client.ListPerson(context.Background(), new(pb.RequestType))
 	if err != nil {
 		return err
@@ -47,18 +35,25 @@ func list() error {
 		if err != nil {
 			return err
 		}
-		fmt.Println(person)
+		grpclog.Println(person)
 	}
 	return nil
 }
 
 func main() {
+	conn, err := grpc.Dial(address, grpc.WithInsecure())
+	if err != nil {
+		grpclog.Fatalf("fail to dial: %v", err)
+	}
+	defer conn.Close()
+	client := pb.NewCustomerServiceClient(conn)
+
 	(&sc.Cmds{
 		{
 			Name: "list",
 			Desc: "list: listing person",
 			Run: func(c *sc.C, args []string) error {
-				return list()
+				return list(client)
 			},
 		},
 		{
@@ -73,7 +68,7 @@ func main() {
 				if err != nil {
 					return err
 				}
-				return add(name, age)
+				return add(client, name, age)
 			},
 		},
 	}).Run(&sc.C{

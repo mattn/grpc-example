@@ -11,6 +11,8 @@ import (
 	pb "github.com/mattn/grpc-example/proto"
 )
 
+const port = ":11111"
+
 type customerService struct {
 	customers []*pb.Person
 	m         sync.Mutex
@@ -35,7 +37,7 @@ func (cs *customerService) AddPerson(c context.Context, p *pb.Person) (*pb.Respo
 }
 
 func main() {
-	lis, err := net.Listen("tcp", ":11111")
+	lis, err := net.Listen("tcp", port)
 	if err != nil {
 		log.Fatalf("failed to listen: %v", err)
 	}
